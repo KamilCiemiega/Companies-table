@@ -13,7 +13,7 @@ class App extends Component {
 
   componentDidMount() {
       axios.get("https://api.tvmaze.com/search/shows?q=snow")
-      .then(resp => {
+      Promise.then(resp => {
         this.setState({data:resp.data})
       })
       .catch(err => {

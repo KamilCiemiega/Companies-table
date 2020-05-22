@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
+import getDataFromApi from '../Api/getDataFromApi';
 
 class Table extends Component {
     state = {
         perPage: 0,
-        list:''
+        list:'',
+        data: []
     }
 
-    async componentDidMount() {
-        const data = await this.props.data
-        this.setState({data})
+    componentDidMount() {
+        Promise.then((value) => {
+            console.log(value)
+            // this.setState({data:getDataFromApi()})
+        })
     }
+
+    
 
     handleChange = e => {
         this.setState({ 
