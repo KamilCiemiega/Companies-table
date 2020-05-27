@@ -9,10 +9,9 @@ class Table extends Component {
     }
 
     componentDidMount() {
-        Promise.then((value) => {
-            console.log(value)
-            // this.setState({data:getDataFromApi()})
-        })
+        getDataFromApi().then((value) => {
+            this.setState({data:value})
+        })        
     }
 
     
@@ -23,40 +22,61 @@ class Table extends Component {
         })
     };
 
-    renderFilteredList = async () => {
-        const filteredList = await this.props.data.filter(
-            elem =>
-                elem.toLowerCase().indexOf(this.state.list.toLowerCase()) > -1
-        );
-        if(this.state.list.length === 0) {
-            return null;
+     renderFilteredList = () => {
+         const { data } = this.state
+        //  const arr = [
+        //      'asd',
+        //      'fgh'
+        //  ]
+        const arr = []
+        if(data.length > 0){
+            data.forEach(elem => {
+                arr.push(elem.show.name)
+            });
+            // for(let key in data){
+            //     console.log(data[key].show.name)
+            
+            // }
+                const filteredList = arr.filter(
+                    elem =>
+                  elem.toLowerCase().indexOf(this.state.list.toLowerCase()) > -1
+              );
+              console.log(filteredList)
         }
-        console.log(filteredList)
-        return (
-            filteredList.slice(this.state.perPage).map(elem => {
-                return (
-                    <tr>
-                        <td>{elem.show.name}</td>
-                        <td>{elem.show.type}</td>
-                        <td>{elem.show.language}</td>
-                        <td>{elem.show.genres.map(item => <span>{item}</span>)}</td>
-                        <td>{elem.show.runtime}</td>
-                        <td>{elem.show.status}</td>
-                    </tr>
-                );
-            })
-        );
+        console.log(data)
+        // const regex = new RegExp(`^${this.state.list}`,'i');
+        // if(this.state.data.length > 0){
+        //     let filteredList = arr.sort().filter(v => v.test(regex))
+        //     console.log(filteredList)
+        // }
+        
+        
+        // console.log(filteredList)
+        // return (
+        //     filteredList.slice(this.state.perPage).map(elem => {
+        //         return (
+        //             <tr>
+        //                 <td>{elem.show.name}</td>
+        //                 <td>{elem.show.type}</td>
+        //                 <td>{elem.show.language}</td>
+        //                 <td>{elem.show.genres.map(item => <span>{item}</span>)}</td>
+        //                 <td>{elem.show.runtime}</td>
+        //                 <td>{elem.show.status}</td>
+        //             </tr>
+        //         );
+        //     })
+        // );
     }
 
 
     mapData = () => {
-        let list = this.props.data.slice(this.state.perPage).map(elem => {
+        let list = this.state.data.slice(this.state.perPage).map(elem => {
             return (
-                <tr>
+                <tr key={elem.show.id}>
                     <td>{elem.show.name}</td>
                     <td>{elem.show.type}</td>
                     <td>{elem.show.language}</td>
-                    <td>{elem.show.genres.map(item => <span>{item}</span>)}</td>
+                    <td>{elem.show.genres.map((item,i) => <span key={i}>{item}</span>)}</td>
                     <td>{elem.show.runtime}</td>
                     <td>{elem.show.status}</td>
                 </tr>
@@ -102,7 +122,7 @@ class Table extends Component {
                     </thead>
                     <tbody>
                         {this.mapData()}
-                        {/* {this.renderFilteredList()} */}
+                        {this.renderFilteredList()}
                     </tbody>
                 </table>
             </div>
