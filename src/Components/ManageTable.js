@@ -4,11 +4,11 @@ import Pagination from './Pagination';
 export default class ManageTable extends Component {
 
     state = {
-        showArrow: 1,
         sortedFieldValue: '',
         direction: '',
         currentSort: 'default',
-        filtredAndSortedList: []
+        currentPage: 1,
+        perPage: 10
     }
 
     renderSortedTable = () => {
@@ -63,14 +63,52 @@ export default class ManageTable extends Component {
             );
 
         })
-        console.log(filtredAndSortedList)
+
         return filtredAndSortedList;
     }
 
+    handleChange = e => {
+        this.setState({
+            perPage: e.target.value,
+            currentPage: 1
+        })
+    };
+
+    handleClick = (event) => {
+        this.setState({ currentPage: Number(event.target.id) });
+    }
+
+    renderPageNumbers = () => {
+        const { perPage } = this.state
+        const pageNumber = [];
+        for (let i = 1; i <= Math.ceil(this.renderFilteredAndSortedList().length / perPage); i++) {
+            pageNumber.push(i);
+        }
+        return pageNumber;
+    }
+
+
     render() {
+
+        const filtredAndSortedList = this.renderFilteredAndSortedList()
+        const renderPageNumbers = this.renderPageNumbers()
+
+        const indexOfLastTodo = this.state.currentPage * this.state.perPage
+        const indexOfFirstTodo = indexOfLastTodo - this.state.perPage
 
         return (
             <>
+                <div className="select-style">
+                    <p>Results per page</p>
+                    <select
+                        name="perPage"
+                        value={this.state.perPage}
+                        onChange={this.handleChange}>
+                        <option value={2}>2</option>
+                        <option value={5}>5</option>
+                        <option value={10}>10</option>
+                    </select>
+                </div>
                 <table>
                     <thead>
                         <tr>
@@ -131,7 +169,7 @@ export default class ManageTable extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.renderFilteredAndSortedList().slice(this.props.perPage).map(elem => {
+                        {filtredAndSortedList.slice(indexOfFirstTodo, indexOfLastTodo).map(elem => {
                             return (
                                 <tr key={elem.id}>
                                     <td>{elem.name}</td>
@@ -145,7 +183,12 @@ export default class ManageTable extends Component {
                         })}
                     </tbody>
                 </table>
-                <Pagination filtredAndSortedList={this.renderFilteredAndSortedList} />
+                <Pagination
+                    currentPage={this.state.currentPage}
+                    perPage={this.state.perPage}
+                    handleClick={this.handleClick}
+                    renderPageNumbers={renderPageNumbers} 
+                    filtredAndSortedList={filtredAndSortedList}/>
             </>
         );
     }

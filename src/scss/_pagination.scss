@@ -1,0 +1,30 @@
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &-numbers{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        list-style-type: none;
+          & li{
+            width: 30px;
+            height: 30px;
+            font-size: 20px;
+            text-align: center;
+            cursor: pointer;
+            margin-left: 5px;
+            &:hover{
+                transition: 0.5s all;
+                background: lightgray;
+            }
+        }
+        }
+        .paginaion-button-selected{
+            background: #3C3C3C;
+            color: white;
+            &:hover{
+                background: #3C3C3C;  
+            }
+        }
+    }
